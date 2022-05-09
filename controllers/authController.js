@@ -1,9 +1,19 @@
 const jwt=require("jsonwebtoken")
-
+const User =require("../model/userMode")
 
 exports.login= (req,res)=>{
-    //authenticat
-    const username=req.body.username
+    const { email, password } = req.body;
+    if (!email || !password){
+        res.status(402).json({message:"Enter email and password"})
+        
+    }
+    const users = await User.findOne({ email })
+    if(!users)
+    res.status(402).json({
+        message:"Not logged in"
+    })
+
+    const username=req.body.user
     const user={name:username}
     const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN)
    
